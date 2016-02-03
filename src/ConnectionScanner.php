@@ -35,7 +35,7 @@ class ConnectionScanner {
     public function getRoute($origin, $destination, $departureTime) {
         $connections = $this->getConnections($origin, $departureTime);
 
-        return $this->getRouteFromConnections($connections, $destination);
+        return $this->getRouteFromConnections($connections, $origin, $destination);
     }
 
     /**
@@ -63,13 +63,14 @@ class ConnectionScanner {
 
     /**
      * Given a Hash Map of fastest connections trace back the route from the target
-     * destination
+     * destination to the origin. If no route is found an empty array is returned
      *
      * @param  array  $connections
+     * @param  strubg $origin
      * @param  string $destination
      * @return array
      */
-    private function getRouteFromConnections(array $connections, $destination) {
+    private function getRouteFromConnections(array $connections, $origin, $destination) {
         $route = [];
 
         while (array_key_exists($destination, $connections)) {
@@ -77,6 +78,13 @@ class ConnectionScanner {
             $destination = $connections[$destination][self::ORIGIN_INDEX];
         }
 
-        return array_reverse($route);
+        // if we found a route back to the origin
+        if ($origin === $destination) {
+            return array_reverse($route);
+        }
+        else {
+            return [];
+        }
+
     }
 }

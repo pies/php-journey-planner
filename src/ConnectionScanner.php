@@ -39,7 +39,8 @@ class ConnectionScanner {
     }
 
     /**
-     * Return the fastest connections to each station
+     * Create a HashMap containing the best connections to each station. At present
+     * the fastest connection is considered best.
      *
      * @param  string $startStation
      * @param  int $startTime
@@ -52,7 +53,10 @@ class ConnectionScanner {
         foreach ($this->timetable as $connection) {
             list($origin, $destination, $departureTime, $arrivalTime) = $connection;
 
-            if (!array_key_exists($destination, $arrivals) || $arrivals[$destination] > $arrivalTime) {
+            $canGetToThisConnection = array_key_exists($origin, $arrivals) && $departureTime > $arrivals[$origin];
+            $thisConnectionIsBetter = !array_key_exists($destination, $arrivals) || $arrivals[$destination] > $arrivalTime;
+
+            if ($canGetToThisConnection && $thisConnectionIsBetter) {
                 $arrivals[$destination] = $arrivalTime;
                 $connections[$destination] = $connection;
             }

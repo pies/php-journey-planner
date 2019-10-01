@@ -53,7 +53,7 @@ class ConnectionScanner {
         foreach ($this->timetable as $connection) {
             list($origin, $destination, $departureTime, $arrivalTime) = $connection;
 
-            $canGetToThisConnection = array_key_exists($origin, $arrivals) && $departureTime > $arrivals[$origin];
+            $canGetToThisConnection = array_key_exists($origin, $arrivals) && $departureTime >= $arrivals[$origin];
             $thisConnectionIsBetter = !array_key_exists($destination, $arrivals) || $arrivals[$destination] > $arrivalTime;
 
             if ($canGetToThisConnection && $thisConnectionIsBetter) {
